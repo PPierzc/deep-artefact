@@ -1,0 +1,6 @@
+name: 'deep-artefact'
+username: 'stud74'
+host: 'tcml-master01.uni-tuebingen.de'
+pipeline:
+  - 'touch hurdler.log'
+  - 'touch hurdler2.log'
