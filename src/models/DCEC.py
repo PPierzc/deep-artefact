@@ -7,7 +7,7 @@ import numpy as np
 from sklearn.cluster import KMeans
 from time import time
 
-from ..layers import ClusteringLayer
+from layers import ClusteringLayer
 
 
 class DCEC(object):
@@ -23,7 +23,7 @@ class DCEC(object):
 
         super(DCEC, self).__init__()
 
-        self.name = name
+        self.model_name = name
         self.n_clusters = n_clusters
         self.input_shape = input_shape
         self.alpha = alpha
@@ -66,7 +66,8 @@ class DCEC(object):
             batch_size=256,
             maxiter=2e4,
             tol=1e-3,
-            update_interval=140
+            update_interval=140,
+            callback=lambda x: None
     ):
         save_interval = x.shape[0] / batch_size * 5
 
@@ -114,6 +115,7 @@ class DCEC(object):
                 history['delta'].append(delta_label)
 
                 sys.stdout.write('\riteration: {:<5} delta: {:.5f}                 '.format(ite, delta_label))
+                callback(delta_label)
 
                 y_pred_last = np.copy(self.y_pred)
 
@@ -151,8 +153,8 @@ class DCEC(object):
             ite += 1
 
         # save the trained model
-        print('saving model to:', self.save_dir + f'/dcec_model_{self.name}.h5')
-        self.model.save(self.save_dir + f'/dcec_model_{self.name}.h5')
+        print('saving model to:', self.save_dir + f'/dcec_model_{self.model_name}.h5')
+        self.model.save(self.save_dir + f'/dcec_model_{self.model_name}.h5')
         t3 = time()
         print('Time:', t3 - t1)
         return history
